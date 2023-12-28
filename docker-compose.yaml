@@ -1,0 +1,45 @@
+version: '3.8'
+
+services:
+  mysql-server:
+    image: mysql:8.2
+    container_name: my-mysql-server
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: password
+      MYSQL_DATABASE: human_resources
+      MYSQL_USER: karane
+      MYSQL_PASSWORD: kvpass
+    command: --default-authentication-plugin=mysql_native_password
+    volumes:
+      # - ./mysql_data:/var/lib/mysql
+      - ./mysql-setup:/docker-entrypoint-initdb.d
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "karane", "-p", "kvpass"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+
+  fastapi-app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: fastapi-app
+    ports:
+      - "8000:8000"
+    environment:
+      DATABASE_URL: "mysql+pymysql://karane:kvpass@my-mysql-server:3306/human_resources"
+    volumes:
+      - ./src:/app
+    depends_on:
+      - mysql-server
+    command: ["sh", "-c", "while ! nc -z my-mysql-server 3306; do sleep 1; done && uvicorn main:app --host 0.0.0.0 --port 8000 --reload"]
+
+volumes:
+  mysql_data:
+
+
+networks:
+  mynetwork:
+    driver: bridge

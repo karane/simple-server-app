@@ -1,0 +1,8 @@
+fastapi
+uvicorn
+sqlalchemy
+mysqlclient
+# pymysql
+# mysql-connector-python[mysqlclient]
+rich
+ipdb

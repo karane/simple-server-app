@@ -30,6 +30,7 @@ services:
       - "8000:8000"
     environment:
       DATABASE_URL: "mysql+pymysql://karane:kvpass@my-mysql-server:3306/human_resources"
+      MACHINE_NAME: "docker-machine-001"
     volumes:
       - ./src:/app
     depends_on:

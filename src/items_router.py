@@ -1,14 +1,17 @@
 from fastapi import APIRouter, HTTPException
 from service import Service
 from models import Item
+import os
 
 router = APIRouter()
 service = Service()
+machine_name = os.environ.get('MACHINE_NAME', 'unknown')
 
 #  Healthy check
 @router.get("/health")
 def health():
-    return {"status": "ok"}
+    return { "status": "ok",
+            "machine_name": machine_name}
 
 # Route to create an item
 @router.post("/items/", response_model=Item)

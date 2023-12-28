@@ -12,25 +12,25 @@ This FastAPI application provides CRUD operations for managing items.
 
 * Health Check
     ```bash
-    curl -X GET http://localhost:8000/health
+    curl -s -X GET http://localhost:8000/health | jq "."
     ```
 
 * Create Item
     ```bash
-    curl -X POST -H "Content-Type: application/json" -d '{"name": "New Item", "description": "A sample item"}' http://localhost:8000/items/
+    curl -s -X POST -H "Content-Type: application/json" -d '{"name": "New Item", "description": "A sample item"}' http://localhost:8000/items/ | jq "."
     ```
 * Retrieve List of Items
 
     ```bash
-    curl -X GET http://localhost:8000/items/
+    curl -s -X GET http://localhost:8000/items/ | jq "."
     ```
 * Update Item
 
     ```bash
-    curl -X PUT -H "Content-Type: application/json" -d '{"name": "Updated Item", "description": "An updated item"}' http://localhost:8000/items/1
+    curl -s -X PUT -H "Content-Type: application/json" -d '{"name": "Updated Item", "description": "An updated item"}' http://localhost:8000/items/1 | jq "."
     ```
 * Delete Item
 
     ```bash
-    curl -X DELETE http://localhost:8000/items/1
+    curl -X DELETE http://localhost:8000/items/1 | jq "."
     ```

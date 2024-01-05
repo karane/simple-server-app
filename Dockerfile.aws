@@ -1,0 +1,32 @@
+# Use Ubuntu as the base image
+FROM ubuntu:latest
+
+# Set non-interactive mode during build
+ENV DEBIAN_FRONTEND=noninteractive
+
+# Update package lists and install necessary dependencies
+RUN apt-get update -y && \
+    apt-get install -y python3.9 && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/*
+
+RUN apt-get update 
+RUN apt-get install -y wget unzip python3-pip libmariadb3 libmariadb-dev pkg-config
+
+# Download the FastAPI app as a zip file from GitHub
+RUN wget https://codeload.github.com/karane/simple-server-app/zip/refs/heads/main -O simple-server-app-main.zip && \
+    unzip simple-server-app-main.zip && \
+    mv simple-server-app-main simple-server-app \
+    && rm simple-server-app-main.zip
+
+# Change to the app directory
+WORKDIR /simple-server-app
+
+RUN pip3 install -r requirements.txt
+
+# Change to the app directory
+WORKDIR /simple-server-app/src
+
+
+# ENTRYPOINT [ "sleep", "infinity" ]
+CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000", "--reload"]
